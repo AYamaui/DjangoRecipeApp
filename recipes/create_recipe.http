@@ -1,0 +1,56 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection) or
+# paste cURL into the file and request will be converted to HTTP Request format.
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+
+# curl  -X PATCH -d "description=Asado Negro's description...&ingredients=[{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]" -H 'Accept: application/json; indent=4' -u alexandra:recipes123 http://127.0.0.1:8000/recipes/2/
+PATCH http://127.0.0.1:8000/recipes/2/
+Authorization: Basic alexandra recipes123
+Accept: application/json; indent=4
+Content-Type: application/x-www-form-urlencoded
+
+description=Asado Negro's description...&ingredients=[{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]
+
+###
+
+# curl -X POST -d "name=Pizza&description=Pizza description...&ingredients=[{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]" -H 'Accept: application/json; indent=4' -u alexandra:recipes123 http://127.0.0.1:8000/recipes/
+POST http://127.0.0.1:8000/recipes/
+Authorization: Basic alexandra recipes123
+Accept: application/json; indent=4
+Content-Type: application/x-www-form-urlencoded
+
+name=Pizza&description=Pizza description...&ingredients=[{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]
+
+###
+
+#  curl-X POST -d '{"name":"Pizza","description":"Pizza description...","ingredients":[{"name": "dough"}, {"name": "cheese"}, {"name": "tomato"}]}' -H "Content-Type: application/json" -u alexandra:recipes123 http://127.0.0.1:8000/recipes/
+
+
+# curl -X PATCH -d '{"ingredients": [{"name": "queso"}, {"name": "tomate"}]}' -H 'Content-Type: application/json; indent=4' -u alexandra:recipes123 http://127.0.0.1:8000/recipes/4/
+POST http://127.0.0.1:8000/recipes/4/
+Authorization: Basic alexandra recipes123
+Accept: application/json; indent=4
+Content-Type: application/x-www-form-urlencoded
+
+{"ingredients": [{"name": "queso"}, {"name": "tomate"}]}
+
+###
+
+
+#import logging
+#
+#logger = logging.getLogger(__name__)
+#
+#logger.error('message')
+
+
+
+
+
+
+
+

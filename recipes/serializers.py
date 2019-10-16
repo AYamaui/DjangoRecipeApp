@@ -13,7 +13,7 @@ class RecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Recipe
-        fields = ['name', 'description', 'ingredients']
+        fields = ['id', 'name', 'description', 'ingredients']
 
     def create(self, validated_data):
         ingredients_data = validated_data.pop('ingredients')
@@ -25,16 +25,15 @@ class RecipeSerializer(serializers.ModelSerializer):
         return recipe
 
     def update(self, instance, validated_data):
-        ingredients = []
         ingredients_data = validated_data.pop('ingredients')
 
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('description', instance.description)
         instance.save()
 
-        for ingredient_data in ingredients_data:
-            ingredients.append(Ingredient.objects.create(**ingredient_data))
+        instance.ingredients.all().delete()
 
-        instance.ingredients.set(ingredients)
+        for ingredient_data in ingredients_data:
+            instance.ingredients.add(Ingredient.objects.create(**ingredient_data, recipe_id=instance.id))
 
         return instance

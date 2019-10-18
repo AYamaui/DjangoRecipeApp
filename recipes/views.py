@@ -20,11 +20,3 @@ class RecipeViewSet(viewsets.ModelViewSet):
             return Recipe.objects.filter(name__icontains=name)
         else:
             return self.queryset
-
-
-class IngredientViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Ingredient.objects.all()
-    serializer_class = IngredientSerializer

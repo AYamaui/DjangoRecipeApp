@@ -1,11 +1,11 @@
-from django.test import TestCase
+from rest_framework.test import APITestCase
 from rest_framework.utils import json
 
 from recipes.models import Recipe, Ingredient
 from rest_framework import status
 
 
-class RecipeModelTest(TestCase):
+class RecipeModelTest(APITestCase):
 
     def setUp(self):
         recipe = Recipe.objects.create(name="Pabellon", description="Pabellon description")
@@ -21,9 +21,16 @@ class RecipeModelTest(TestCase):
         response = self.client.post('/recipes/', content_type='application/json', data=json.dumps(data))
         recipes = Recipe.objects.all()
         self.assertEqual(len(recipes), 2)
-        data['id'] = 2
-        self.assertEqual(json.loads(response.content), data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        response = response.data
+        del response['id']
+        self.assertEqual(response, data)
+
+        response = self.client.get('/recipes/2/', content_type='application/json')
+        response = response.data
+        del response['id']
+        self.assertEqual(response, data)
 
     def test_detail_recipe(self):
         data = {
@@ -37,7 +44,7 @@ class RecipeModelTest(TestCase):
         }
         response = self.client.get('/recipes/1/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content), data)
+        self.assertEqual(response.data, data)
 
     def test_detail_recipe_not_found(self):
         response = self.client.get('/recipes/2/')
@@ -55,7 +62,7 @@ class RecipeModelTest(TestCase):
         }
         response = self.client.get('/recipes/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content)['results'], [data])
+        self.assertEqual(response.data['results'], [data])
 
     def test_update_recipe(self):
         recipe_id = 1
@@ -69,12 +76,14 @@ class RecipeModelTest(TestCase):
         response = self.client.patch('/recipes/{}/'.format(recipe_id),
                                      data=json.dumps(data),
                                      content_type='application/json')
-        data['id'] = recipe_id
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content), data)
+
+        response = response.data
+        del response['id']
+        self.assertEqual(response, data)
 
         response = self.client.get('/recipes/')
-        self.assertEqual(json.loads(response.content)["count"], 1)
+        self.assertEqual(response.data["count"], 1)
 
     def test_delete_recipe(self):
         response = self.client.delete('/recipes/1/')
@@ -95,9 +104,9 @@ class RecipeModelTest(TestCase):
         }
         response = self.client.get('/recipes/?name=Pa')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content)['results'], [data])
+        self.assertEqual(response.data['results'], [data])
 
     def test_search_recipe_not_found(self):
         response = self.client.get('/recipes/?name=C')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(json.loads(response.content)['results'], [])
+        self.assertEqual(response.data['results'], [])
